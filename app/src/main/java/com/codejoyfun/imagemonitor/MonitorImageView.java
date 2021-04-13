@@ -110,13 +110,7 @@ public class MonitorImageView extends ImageView implements MessageQueue.IdleHand
     }
 
     private void dealWarning(int drawableWidth, int drawableHeight, int imageSize, Drawable drawable) {
-        if (BuildConfig.DEBUG) {
-            //测试环境 弹框
-            ImageMonitor.debugAction(threadStack, drawableWidth, drawableHeight, imageSize, drawable);
-        } else {
-            //正式环境 上报
-            ImageMonitor.releaseAction(threadStack, drawableWidth, drawableHeight, imageSize, drawable);
-        }
+        ImageMonitor.dealWarning(threadStack, drawableWidth, drawableHeight, imageSize, drawable);
     }
 
     private int calculateImageSize(Drawable drawable) {

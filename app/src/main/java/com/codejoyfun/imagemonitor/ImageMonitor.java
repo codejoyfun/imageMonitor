@@ -12,8 +12,7 @@ public class ImageMonitor {
     private static volatile boolean isInit = false;
     private int maxAlarmImageSize;
     private int maxAlarmMultiple;
-    private Action debugAction;
-    private Action releaseAction;
+    private dealWarning dealWarning;
 
     private static ImageMonitor INSTANCE;
 
@@ -38,15 +37,9 @@ public class ImageMonitor {
         return INSTANCE.maxAlarmMultiple;
     }
 
-    public static void debugAction(String threadStack, int drawableWidth, int drawableHeight, int imageSize, Drawable drawable) {
-        if (INSTANCE.debugAction != null) {
-            INSTANCE.debugAction.run(threadStack, drawableWidth, drawableHeight, imageSize, drawable);
-        }
-    }
-
-    public static void releaseAction(String threadStack, int drawableWidth, int drawableHeight, int imageSize, Drawable drawable) {
-        if (INSTANCE.releaseAction != null) {
-            INSTANCE.releaseAction.run(threadStack, drawableWidth, drawableHeight, imageSize, drawable);
+    public static void dealWarning(String threadStack, int drawableWidth, int drawableHeight, int imageSize, Drawable drawable) {
+        if (INSTANCE.dealWarning != null) {
+            INSTANCE.dealWarning.deal(threadStack, drawableWidth, drawableHeight, imageSize, drawable);
         }
     }
 
@@ -54,15 +47,13 @@ public class ImageMonitor {
     private ImageMonitor(Config config) {
         this.maxAlarmImageSize = config.maxAlarmImageSize;
         this.maxAlarmMultiple = config.maxAlarmMultiple;
-        this.debugAction = config.debugAction;
-        this.releaseAction = config.releaseAction;
+        this.dealWarning = config.dealWarning;
     }
 
     static class Config {
         private static int maxAlarmImageSize = MAX_ALARM_IMAGE_SIZE;
         private static int maxAlarmMultiple = MAX_ALARM_MULTIPLE;
-        private static Action debugAction;
-        private static Action releaseAction;
+        private static ImageMonitor.dealWarning dealWarning;
 
         public Config maxAlarmImageSize(int maxAlarmImageSize) {
             this.maxAlarmImageSize = maxAlarmImageSize;
@@ -74,18 +65,13 @@ public class ImageMonitor {
             return this;
         }
 
-        public Config debugAction(Action debugAction) {
-            this.debugAction = debugAction;
-            return this;
-        }
-
-        public Config releaseAction(Action releaseAction) {
-            this.releaseAction = releaseAction;
+        public Config dealWarning(ImageMonitor.dealWarning dealWarning) {
+            this.dealWarning = dealWarning;
             return this;
         }
     }
 
-    public interface Action {
-        void run(String threadStack, int drawableWidth, int drawableHeight, int imageSize, Drawable drawable);
+    public interface dealWarning {
+        void deal(String threadStack, int drawableWidth, int drawableHeight, int imageSize, Drawable drawable);
     }
 }

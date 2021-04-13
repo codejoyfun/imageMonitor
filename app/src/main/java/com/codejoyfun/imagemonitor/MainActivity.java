@@ -2,12 +2,9 @@ package com.codejoyfun.imagemonitor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,10 +13,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageMonitor.init(new ImageMonitor.Config().debugAction((threadStack, drawableWidth, drawableHeight, imageSize, drawable) -> {
-
-        }).releaseAction((threadStack, drawableWidth, drawableHeight, imageSize, drawable) -> {
-
+        ImageMonitor.init(new ImageMonitor.Config().dealWarning((threadStack, drawableWidth, drawableHeight, imageSize, drawable) -> {
+            if(BuildConfig.DEBUG){
+                //debug环境下，建议弹框
+            }else{
+                //正式环境，建议上报friebase
+            }
         }));
 
         ImageView imageView = findViewById(R.id.image_view);
